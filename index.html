@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotionCraft Studios | 頂尖動畫廣告與動態美學工作室</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300&display=swap" rel="stylesheet">
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            bg: '#08090C',
+                            surface: '#111319',
+                            card: '#161922',
+                            border: '#232836',
+                            textMuted: '#8B94A7',
+                            accent: '#6366F1',
+                            accentHover: '#4F46E5',
+                            gold: '#D1A358'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #08090C;
+            color: #F3F4F6;
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        /* 高級簡約微光與質感邊框 */
+        .premium-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+        .premium-border:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .minimal-glass {
+            background: rgba(17, 19, 25, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* 首頁動態線條與流動效果 */
+        .ambient-glow-1 {
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(8, 9, 12, 0) 70%);
+        }
+        .ambient-glow-2 {
+            background: radial-gradient(circle, rgba(209, 163, 88, 0.1) 0%, rgba(8, 9, 12, 0) 70%);
+        }
+
+        /* 影片響應式比例 */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 水平作品廊道 (3D Scale Carousel) 樣式 */
+        .carousel-item {
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .carousel-item.active {
+            transform: scale(1.05);
+            opacity: 1;
+            z-index: 20;
+            filter: drop-shadow(0 20px 30px rgba(99, 102, 241, 0.25));
+        }
+        .carousel-item.side {
+            transform: scale(0.85);
+            opacity: 0.5;
+            z-index: 10;
+            cursor: pointer;
+        }
+        .carousel-item.side:hover {
+            opacity: 0.85;
+        }
+        .carousel-item.hidden-item {
+            transform: scale(0.7);
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        /* 圖片懸停 hover 質感加強 */
+        .portfolio-item {
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .portfolio-item:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.25);
+            transform: translateY(-4px);
+        }
+        .portfolio-item .play-badge {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .portfolio-item:hover .play-badge {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Magnetic button transition helper */
+        .magnetic-btn {
+            will-change: transform;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-studio-accent selection:text-white">
+
+    <!-- 導覽列 Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-40 minimal-glass border-b border-studio-border/60 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+            <a href="javascript:void(0)" onclick="navigateTo('hero')" class="flex items-center space-x-3 group">
+                <div class="w-9 h-9 rounded-lg bg-studio-accent flex items-center justify-center text-white font-black text-base shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                    M
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold tracking-tight text-white group-hover:text-studio-accent transition-colors">MotionCraft</span>
+                    <span class="text-[9px] uppercase tracking-widest text-studio-textMuted font-mono">Studios</span>
+                </div>
+            </a>
+
+            <!-- 選單連結 (SPA 頁面切換) -->
+            <div class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-wider">
+                <a href="javascript:void(0)" onclick="navigateTo('hero')" data-page="hero" class="nav-link text-white font-semibold hover:text-white transition-colors">首頁 Vision</a>
+                <a href="javascript:void(0)" onclick="navigateTo('services')" data-page="services" class="nav-link text-studio-textMuted hover:text-white transition-colors">服務 Services</a>
+                <a href="javascript:void(0)" onclick="navigateTo('portfolio')" data-page="portfolio" class="nav-link text-studio-textMuted hover:text-white transition-colors">作品 Portfolio</a>
+                <a href="javascript:void(0)" onclick="navigateTo('case-studies')" data-page="case-studies" class="nav-link text-studio-textMuted hover:text-white transition-colors">案例 Insights</a>
+                <a href="javascript:void(0)" onclick="navigateTo('team')" data-page="team" class="nav-link text-studio-textMuted hover:text-white transition-colors">團隊 Studio</a>
+            </div>
+
+            <div class="hidden md:block">
+                <a href="javascript:void(0)" onclick="navigateTo('contact')" class="magnetic-btn px-5 py-2.5 rounded-full text-xs font-semibold bg-white text-black hover:bg-gray-200 transition-all shadow-md">
+                    合作諮詢
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- 行動裝置選單內頁 -->
+        <div id="mobile-menu" class="hidden md:hidden minimal-glass border-b border-studio-border px-6 py-6 space-y-4 text-sm uppercase tracking-wider">
+            <a href="javascript:void(0)" onclick="navigateTo('hero')" class="mobile-link block text-gray-300 hover:text-white">首頁 Vision</a>
+            <a href="javascript:void(0)" onclick="navigateTo('services')" class="mobile-link block text-gray-300 hover:text-white">服務 Services</a>
+            <a href="javascript:void(0)" onclick="navigateTo('portfolio')" class="mobile-link block text-gray-300 hover:text-white">作品 Portfolio</a>
+            <a href="javascript:void(0)" onclick="navigateTo('case-studies')" class="mobile-link block text-gray-300 hover:text-white">案例 Insights</a>
+            <a href="javascript:void(0)" onclick="navigateTo('team')" class="mobile-link block text-gray-300 hover:text-white">團隊 Studio</a>
+            <a href="javascript:void(0)" onclick="navigateTo('contact')" class="mobile-link block text-center py-3 bg-white text-black font-semibold rounded-full uppercase">合作諮詢</a>
+        </div>
+    </nav>
+
+    <!-- 頁面容器 (SPA 路由視圖切換) -->
+    <main id="main-content">
+        <!-- 1. 首頁 Vision -->
+        <div id="page-hero" class="page-section min-h-screen">
+            <section class="relative pt-36 pb-24 md:pt-48 md:pb-36 overflow-hidden flex flex-col justify-center min-h-screen">
+                <!-- 背景環境光罩 -->
+                <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] ambient-glow-1 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute bottom-10 right-10 w-[450px] h-[450px] ambient-glow-2 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
+                    <div>
+                        <div class="hero-badge inline-flex items-center space-x-3 px-3 py-1.5 rounded-full border border-studio-border bg-studio-surface/60 mb-8 backdrop-blur-md">
+                            <span class="w-1.5 h-1.5 rounded-full bg-studio-accent animate-ping"></span>
+                            <span class="text-xs font-medium tracking-wider uppercase text-studio-textMuted">Motion Crafting High-Impact Adverts</span>
+                        </div>
+                        
+                        <h1 class="hero-title text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-8 leading-[1.1]">
+                            重塑視覺感官體驗。<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-studio-textMuted">打造高品質動態廣告。</span>
+                        </h1>
+
+                        <p class="hero-desc max-w-xl text-base sm:text-lg text-studio-textMuted mb-12 font-light leading-relaxed">
+                            我們專注於商業動畫與動態視覺設計，結合美學工藝與廣告敘事，為品牌打造高轉換率的影音體驗。
+                        </p>
+
+                        <div class="hero-buttons flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                            <button onclick="navigateTo('portfolio')" class="magnetic-btn px-8 py-4 rounded-full font-medium bg-studio-accent text-white hover:bg-studio-accentHover transition-all text-center text-sm tracking-wide shadow-lg shadow-indigo-500/20 inline-block">
+                                探索作品 Showreel
+                            </button>
+                            <button onclick="navigateTo('contact')" class="magnetic-btn px-8 py-4 rounded-full font-medium bg-studio-surface text-gray-300 hover:text-white hover:bg-studio-card transition-all text-center text-sm tracking-wide border border-studio-border inline-block">
+                                預約專案諮詢
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 首頁核心指標展現 -->
+                    <div class="hero-stats mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 pt-10 border-t border-studio-border/60">
+                        <div>
+                            <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">150+</p>
+                            <p class="text-xs uppercase tracking-widest text-studio-textMuted mt-2">Delivered Projects</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">98%</p>
+                            <p class="text-xs uppercase tracking-widest text-studio-textMuted mt-2">Client Satisfaction</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">20M+</p>
+                            <p class="text-xs uppercase tracking-widest text-studio-textMuted mt-2">Ad Impressions</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">15+</p>
+                            <p class="text-xs uppercase tracking-widest text-studio-textMuted mt-2">Global Design Awards</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. 服務項目 Services -->
+        <div id="page-services" class="page-section hidden min-h-screen pt-32 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="mb-16">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-studio-accent mb-3 block">01 / Services & Capabilities</span>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mb-6">全方位動態廣告設計服務</h1>
+                    <p class="text-studio-textMuted text-base max-w-3xl font-light leading-relaxed">
+                        我們整合現代視覺藝術與廣告溝通邏輯，針對各種數位媒介提供最適合的影音創作解決方案。從頂級品牌的商業大片到數位社群的高動態短影音，皆具備嚴謹的美學品質與明確的商業轉換導向。
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 服務 1 -->
+                    <div class="bg-studio-surface p-8 rounded-2xl premium-border flex flex-col justify-between group cursor-pointer" onclick="openDetailModal('service-3d')">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-studio-textMuted font-mono">01.01</span>
+                                <span class="text-xs text-studio-accent opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">查看完整技術細節 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mt-6 mb-4 group-hover:text-studio-accent transition-colors">3D 商業廣告與高階動畫</h3>
+                            <p class="text-studio-textMuted text-sm leading-relaxed mb-6 font-light">
+                                運用超高解析度光影、複雜物理流體模擬與金屬玻璃質感渲染，將科技、精品與產品細節極致演繹。
+                            </p>
+                        </div>
+                        <ul class="text-xs text-studio-textMuted space-y-3 pt-6 border-t border-studio-border/50">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 超擬真產品結構分解與爆炸圖</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> Houdini 複雜水花、煙霧與粒子 VFX</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 8K 級別發佈會及大型廣告影像</li>
+                        </ul>
+                    </div>
+
+                    <!-- 服務 2 -->
+                    <div class="bg-studio-surface p-8 rounded-2xl premium-border flex flex-col justify-between group cursor-pointer" onclick="openDetailModal('service-2d')">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-studio-textMuted font-mono">01.02</span>
+                                <span class="text-xs text-studio-accent opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">查看完整技術細節 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mt-6 mb-4 group-hover:text-studio-accent transition-colors">2D 角色與 Motion Graphics</h3>
+                            <p class="text-studio-textMuted text-sm leading-relaxed mb-6 font-light">
+                                以強烈視覺風格與簡潔流暢的節奏，將抽象概念、金融流程或 SaaS 功能轉化為吸睛的動態故事。
+                            </p>
+                        </div>
+                        <ul class="text-xs text-studio-textMuted space-y-3 pt-6 border-t border-studio-border/50">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 品牌專屬角色 IP 繪製與骨架綁定</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 流暢變形轉場（Morphing Animation）</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 複雜數據與流程懶人包動態化</li>
+                        </ul>
+                    </div>
+
+                    <!-- 服務 3 -->
+                    <div class="bg-studio-surface p-8 rounded-2xl premium-border flex flex-col justify-between group cursor-pointer" onclick="openDetailModal('service-3d-screen')">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-studio-textMuted font-mono">01.03</span>
+                                <span class="text-xs text-studio-accent opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">查看完整技術細節 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mt-6 mb-4 group-hover:text-studio-accent transition-colors">社群短影音與裸眼 3D 巨幕</h3>
+                            <p class="text-studio-textMuted text-sm leading-relaxed mb-6 font-light">
+                                專為短影音時代與大型戶外大屏打造，精準掌控黃金 3 秒注意力，大幅加深品牌的視覺印象。
+                            </p>
+                        </div>
+                        <ul class="text-xs text-studio-textMuted space-y-3 pt-6 border-t border-studio-border/50">
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 9:16 直式高轉換率投放廣告</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 裸眼 3D 視覺視角與透視校正計算</li>
+                            <li class="flex items-center"><i class="fa-solid fa-check text-studio-accent mr-3"></i> 震撼配音與 Foley 客製音效設計</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 服務延伸：特色價值主張 -->
+                <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-studio-border/60 pt-16">
+                    <div class="bg-studio-surface/30 p-6 rounded-2xl border border-studio-border/40">
+                        <i class="fa-solid fa-wand-magic-sparkles text-2xl text-studio-accent mb-4 block"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">藝術與技術合一</h4>
+                        <p class="text-xs text-studio-textMuted leading-relaxed font-light">結合獨立藝術導演的視覺審美與最先進的 3D 粒子渲染引擎，確保每部作品皆能立於當代視覺前沿。</p>
+                    </div>
+                    <div class="bg-studio-surface/30 p-6 rounded-2xl border border-studio-border/40">
+                        <i class="fa-solid fa-bullseye text-2xl text-studio-accent mb-4 block"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">數據導向廣告策略</h4>
+                        <p class="text-xs text-studio-textMuted leading-relaxed font-light">我們不只製作美觀的動畫，更深入研究受眾心理學與秒數留存率，極致化您的廣告投資回報（ROAS）。</p>
+                    </div>
+                    <div class="bg-studio-surface/30 p-6 rounded-2xl border border-studio-border/40">
+                        <i class="fa-solid fa-sliders text-2xl text-studio-accent mb-4 block"></i>
+                        <h4 class="text-lg font-bold text-white mb-2">透明專案管理</h4>
+                        <p class="text-xs text-studio-textMuted leading-relaxed font-light">從視覺提案 Styleframe 到動態 Animatic 階段皆有明確交付哩程碑，讓溝通零時差且品質精準無虞。</p>
+                    </div>
+                </div>
+
+                <!-- 服務作業流程 Overview -->
+                <div class="mt-16 p-10 rounded-3xl bg-studio-surface/50 border border-studio-border">
+                    <h3 class="text-xl font-bold text-white mb-8 text-center">標準動畫製作流程</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                        <div class="p-4">
+                            <div class="w-10 h-10 rounded-full bg-studio-accent/20 text-studio-accent mx-auto flex items-center justify-center font-bold mb-4">1</div>
+                            <h4 class="text-white font-semibold mb-2">概念與腳本 (Script)</h4>
+                            <p class="text-xs text-studio-textMuted font-light">確立視覺主題、文字腳本與專案時程安排。</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="w-10 h-10 rounded-full bg-studio-accent/20 text-studio-accent mx-auto flex items-center justify-center font-bold mb-4">2</div>
+                            <h4 class="text-white font-semibold mb-2">美術提案 (Styleframe)</h4>
+                            <p class="text-xs text-studio-textMuted font-light">製作高精細定格畫面，確定色彩與視覺定調。</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="w-10 h-10 rounded-full bg-studio-accent/20 text-studio-accent mx-auto flex items-center justify-center font-bold mb-4">3</div>
+                            <h4 class="text-white font-semibold mb-2">動態與特效 (Animation)</h4>
+                            <p class="text-xs text-studio-textMuted font-light">進行 3D/2D 動態調校、粒子模擬與鏡頭走位。</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="w-10 h-10 rounded-full bg-studio-accent/20 text-studio-accent mx-auto flex items-center justify-center font-bold mb-4">4</div>
+                            <h4 class="text-white font-semibold mb-2">音效與輸出 (Render)</h4>
+                            <p class="text-xs text-studio-textMuted font-light">加入 Sound Design 與配樂，完成多尺寸高畫質交付。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 作品展示 Portfolio -->
+        <div id="page-portfolio" class="page-section hidden min-h-screen pt-32 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-studio-accent mb-3 block">02 / Dynamic 3D Carousel Showcase</span>
+                        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight">精選作品廊道</h1>
+                        <p class="text-studio-textMuted text-xs sm:text-sm mt-3 font-light">請使用兩側按鈕探索更多作品，中央作品為主打展示焦點。</p>
+                    </div>
+
+                    <!-- 藝廊控制器 -->
+                    <div class="flex items-center space-x-4 mt-6 md:mt-0">
+                        <button id="carousel-prev-btn" onclick="prevCarousel()" class="w-12 h-12 rounded-full border border-studio-border bg-studio-surface text-white hover:bg-studio-accent hover:border-studio-accent transition-all flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+                        <span id="carousel-counter" class="text-xs font-mono text-studio-textMuted px-2">01 / 06</span>
+                        <button id="carousel-next-btn" onclick="nextCarousel()" class="w-12 h-12 rounded-full border border-studio-border bg-studio-surface text-white hover:bg-studio-accent hover:border-studio-accent transition-all flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3D 水平動態作品廊道 (一次呈現 3 個：兩側小、中間放大) -->
+                <div class="relative py-8 overflow-hidden min-h-[460px] flex items-center justify-center">
+                    <div id="carousel-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full items-center justify-center">
+                        
+                        <!-- 作品 1 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('cyber-watch')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" alt="智能手錶廣告" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">3D / Tech</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>AURA Pro 智能手錶廣告</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">極致 3D 金屬工藝與光影渲染，呈現高質感精細結構。</p>
+                            </div>
+                        </div>
+
+                        <!-- 作品 2 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('fintech-app')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="金融 App 動態視覺" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">2D / MG</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>PayFlow 理財 App 動態視覺</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">俐落 MG 動態步調，簡化複雜金融流程與視覺認知。</p>
+                            </div>
+                        </div>
+
+                        <!-- 作品 3 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('electric-car')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80" alt="概念電動車大片" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">3D / Automotive</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>NEO-X 概念電動車大片</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">空氣力學模擬與風洞流線視覺化，詮釋極致速度感。</p>
+                            </div>
+                        </div>
+
+                        <!-- 作品 4 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('cyber-earbuds')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80" alt="降噪耳機商業動畫" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">3D / Tech</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>SOUND-X 主動降噪耳機</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">聲波波形視覺化與超靈敏內部聲學單元爆炸分解圖。</p>
+                            </div>
+                        </div>
+
+                        <!-- 作品 5 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('brand-identity')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="精品香水氣味動態" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">3D / Luxury</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>L'ÉXTASY 精品香水廣告</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">有機流體與水晶折射質感，以視覺轉譯奢華香調。</p>
+                            </div>
+                        </div>
+
+                        <!-- 作品 6 -->
+                        <div class="carousel-item portfolio-item bg-studio-surface rounded-2xl overflow-hidden premium-border cursor-pointer" onclick="openModal('saas-explainer')">
+                            <div class="portfolio-img-wrapper relative aspect-video overflow-hidden bg-black">
+                                <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80" alt="SaaS 雲端平台動態懶人包" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-studio-surface via-transparent to-black/30"></div>
+                                <div class="play-badge absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-studio-accent/90 text-white flex items-center justify-center shadow-xl backdrop-blur-md">
+                                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase font-semibold bg-studio-bg/80 text-white border border-white/10">2D / MG</div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white flex items-center justify-between">
+                                    <span>CloudFlow SaaS 數據動畫</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60"></i>
+                                </h3>
+                                <p class="text-xs text-studio-textMuted mt-2 font-light">抽象數據轉化為高動態圖表與流暢符號動畫。</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 案例研究 Case Studies -->
+        <div id="page-case-studies" class="page-section hidden min-h-screen pt-32 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="mb-16">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-studio-accent mb-3 block">03 / Case Studies & ROI</span>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mb-4">成效數據與案例深度分析</h1>
+                    <p class="text-studio-textMuted text-sm max-w-2xl font-light">我們重視作品的視覺藝術價值，更關心為客戶帶來實際的市場轉換與廣告回報。</p>
+                </div>
+
+                <div class="space-y-12">
+                    <!-- 案例 1 -->
+                    <div class="bg-studio-surface rounded-3xl p-8 lg:p-12 premium-border">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                            <div class="lg:col-span-7">
+                                <span class="text-xs font-mono text-studio-gold uppercase tracking-widest block mb-4">Case Study 01</span>
+                                <h3 class="text-2xl sm:text-3xl font-bold text-white mb-6 leading-tight">AURA Pro：透過擬真 3D 拆解動畫提升新品上市 ROI</h3>
+                                <p class="text-studio-textMuted text-sm font-light leading-relaxed mb-8">
+                                    面對高度同質化的 3C 產品市場，我們摒棄傳統實景影片，改以 3D X-Ray 拆解動畫，精準演繹微型感測器運作過程，成功吸引消費者眼球與信任。
+                                </p>
+
+                                <div class="grid grid-cols-3 gap-6 pt-6 border-t border-studio-border/60 mb-8">
+                                    <div>
+                                        <p class="text-2xl sm:text-3xl font-black text-white">+350%</p>
+                                        <p class="text-[10px] uppercase tracking-widest text-studio-textMuted mt-1">CTR 點擊率提升</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl sm:text-3xl font-black text-white">4.8x</p>
+                                        <p class="text-[10px] uppercase tracking-widest text-studio-textMuted mt-1">ROAS 廣告回報</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl sm:text-3xl font-black text-white">85%</p>
+                                        <p class="text-[10px] uppercase tracking-widest text-studio-textMuted mt-1">完整完播率</p>
+                                    </div>
+                                </div>
+
+                                <button onclick="openDetailModal('case-aura')" class="magnetic-btn px-6 py-3 rounded-full border border-studio-border bg-studio-bg text-white text-xs uppercase tracking-wider hover:border-studio-accent transition-all inline-flex items-center gap-2">
+                                    閱讀完整數據與策略分析 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+                            <div class="lg:col-span-5">
+                                <div class="rounded-2xl overflow-hidden border border-studio-border cursor-pointer group" onclick="openDetailModal('case-aura')">
+                                    <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80" alt="案例展示" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 團隊介紹 Team -->
+        <div id="page-team" class="page-section hidden min-h-screen pt-32 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="mb-16">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-studio-accent mb-3 block">04 / Our Studio Team</span>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mb-4">創作團隊與藝術指導</h1>
+                    <p class="text-studio-textMuted text-sm max-w-2xl font-light">由跨國視覺指導、三維特效工程師與音樂創作者組成的核心製作團隊。</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- 團隊 1 -->
+                    <div class="bg-studio-surface rounded-2xl p-6 border border-studio-border text-center hover:border-studio-accent/50 transition-colors cursor-pointer group" onclick="openDetailModal('team-alex')">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border border-studio-border group-hover:scale-105 transition-transform">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Alex Chen" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-base font-bold text-white">Alex Chen</h3>
+                        <p class="text-xs text-studio-accent uppercase tracking-wider my-2 font-mono">Founder & Director</p>
+                        <p class="text-xs text-studio-textMuted font-light">前紐約動態導演，專精商業動畫與品牌視覺敘事。</p>
+                        <span class="text-[10px] text-studio-textMuted mt-4 block underline group-hover:text-white transition-colors">點擊查看履歷與代表作</span>
+                    </div>
+
+                    <!-- 團隊 2 -->
+                    <div class="bg-studio-surface rounded-2xl p-6 border border-studio-border text-center hover:border-studio-accent/50 transition-colors cursor-pointer group" onclick="openDetailModal('team-david')">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border border-studio-border group-hover:scale-105 transition-transform">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="David Lin" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-base font-bold text-white">David Lin</h3>
+                        <p class="text-xs text-studio-accent uppercase tracking-wider my-2 font-mono">3D VFX Lead</p>
+                        <p class="text-xs text-studio-textMuted font-light">精通 Cinema 4D 與 Houdini 複雜粒子特效模擬。</p>
+                        <span class="text-[10px] text-studio-textMuted mt-4 block underline group-hover:text-white transition-colors">點擊查看履歷與代表作</span>
+                    </div>
+
+                    <!-- 團隊 3 -->
+                    <div class="bg-studio-surface rounded-2xl p-6 border border-studio-border text-center hover:border-studio-accent/50 transition-colors cursor-pointer group" onclick="openDetailModal('team-sarah')">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border border-studio-border group-hover:scale-105 transition-transform">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80" alt="Sarah Huang" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-base font-bold text-white">Sarah Huang</h3>
+                        <p class="text-xs text-studio-accent uppercase tracking-wider my-2 font-mono">Art Director</p>
+                        <p class="text-xs text-studio-textMuted font-light">專長為色彩心理學與角色美學設計。</p>
+                        <span class="text-[10px] text-studio-textMuted mt-4 block underline group-hover:text-white transition-colors">點擊查看履歷與代表作</span>
+                    </div>
+
+                    <!-- 團隊 4 -->
+                    <div class="bg-studio-surface rounded-2xl p-6 border border-studio-border text-center hover:border-studio-accent/50 transition-colors cursor-pointer group" onclick="openDetailModal('team-marcus')">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden mb-6 border border-studio-border group-hover:scale-105 transition-transform">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Marcus Wu" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-base font-bold text-white">Marcus Wu</h3>
+                        <p class="text-xs text-studio-accent uppercase tracking-wider my-2 font-mono">Sound Designer</p>
+                        <p class="text-xs text-studio-textMuted font-light">專注客製動畫音效設計與聲光震撼節奏。</p>
+                        <span class="text-[10px] text-studio-textMuted mt-4 block underline group-hover:text-white transition-colors">點擊查看履歷與代表作</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. 合作諮詢 Contact -->
+        <div id="page-contact" class="page-section hidden min-h-screen pt-32 pb-24">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                    <div class="lg:col-span-5">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-studio-accent mb-3 block">05 / Start A Project</span>
+                        <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                            預約您的專案<br>視覺廣告諮詢
+                        </h1>
+                        <p class="text-studio-textMuted text-sm leading-relaxed mb-10 font-light">
+                            無論您具備完整企劃腳本或僅需初步的概念諮詢，我們的製作團隊皆能提供最佳視覺提案與精準預算規劃。
+                        </p>
+
+                        <div class="space-y-6 text-sm">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xs font-mono uppercase text-studio-textMuted w-16">Email</span>
+                                <span class="text-white font-medium">hello@motioncraft.design</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xs font-mono uppercase text-studio-textMuted w-16">Phone</span>
+                                <span class="text-white font-medium">+886 2 2789 0123</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xs font-mono uppercase text-studio-textMuted w-16">Studio</span>
+                                <span class="text-white font-medium">台北市信義區基隆路二段 88 號 12 樓</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7">
+                        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="bg-studio-surface p-8 sm:p-10 rounded-3xl border border-studio-border space-y-6 shadow-2xl">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">姓名 *</label>
+                                    <input type="text" required placeholder="陳大明" class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-studio-accent transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">品牌 / 公司名稱</label>
+                                    <input type="text" placeholder="品牌名稱" class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-studio-accent transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">電子信箱 *</label>
+                                    <input type="email" required placeholder="name@company.com" class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-studio-accent transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">服務類別</label>
+                                    <select class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-gray-300 focus:outline-none focus:border-studio-accent transition-colors">
+                                        <option>3D 商業廣告動畫</option>
+                                        <option>2D / MG 動態圖像</option>
+                                        <option>社群短影音 / 裸眼 3D</option>
+                                        <option>其他視覺專案</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">專案預算範圍 (TWD)</label>
+                                <select class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-gray-300 focus:outline-none focus:border-studio-accent transition-colors">
+                                    <option>15 萬 - 30 萬</option>
+                                    <option>30 萬 - 60 萬</option>
+                                    <option>60 萬 - 100 萬</option>
+                                    <option>100 萬以上</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-studio-textMuted mb-2">專案需求簡述 *</label>
+                                <textarea rows="4" required placeholder="請簡單說明專案目標與時程規劃..." class="w-full bg-studio-bg border border-studio-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-studio-accent transition-colors"></textarea>
+                            </div>
+
+                            <button type="submit" class="magnetic-btn w-full py-4 rounded-xl font-medium bg-white text-black hover:bg-gray-200 uppercase tracking-wider text-xs transition-all shadow-lg inline-block text-center">
+                                發送預約訊息 Send Inquiry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 極簡頁尾 Footer -->
+    <footer class="border-t border-studio-border/40 py-10 bg-studio-bg">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 rounded bg-studio-accent flex items-center justify-center font-bold text-xs text-white">M</div>
+                <span class="text-sm font-semibold text-white tracking-wider">MotionCraft Studios</span>
+            </div>
+            
+            <p class="text-xs text-studio-textMuted font-light">
+                © 2026 MotionCraft Studios. All Rights Reserved. 精緻動態視覺廣告設計.
+            </p>
+
+            <div class="flex space-x-6 text-xs text-studio-textMuted">
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 作品詳情 Modal -->
+    <div id="portfolio-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-studio-surface max-w-3xl w-full rounded-2xl overflow-hidden border border-studio-border shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-studio-bg/80 text-white flex items-center justify-center hover:bg-studio-accent transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <div class="video-container">
+                <iframe id="modal-video" src="" title="Video preview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <div class="p-8">
+                <span id="modal-tag" class="text-[10px] uppercase tracking-widest font-mono text-studio-accent block mb-2">Tag</span>
+                <h3 id="modal-title" class="text-xl font-bold text-white mb-2">Title</h3>
+                <p id="modal-desc" class="text-studio-textMuted text-xs leading-relaxed font-light mb-6">Description</p>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-studio-border">
+                    <span id="modal-duration" class="text-xs font-mono text-studio-textMuted">4 Weeks</span>
+                    <button onclick="closeModal()" class="px-5 py-2 rounded-full text-xs font-medium bg-white text-black hover:bg-gray-200">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用資訊彈窗 Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-studio-surface max-w-2xl w-full rounded-2xl overflow-hidden border border-studio-border shadow-2xl relative p-8">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-studio-bg/80 text-white flex items-center justify-center hover:bg-studio-accent transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <span id="detail-category" class="text-[10px] uppercase tracking-widest font-mono text-studio-accent block mb-2">Category</span>
+            <h3 id="detail-title" class="text-2xl font-bold text-white mb-4">Title</h3>
+            
+            <div id="detail-content" class="text-studio-textMuted text-sm leading-relaxed font-light space-y-4 mb-8">
+                <!-- 動態注入詳細資訊 -->
+            </div>
+
+            <div class="flex justify-end pt-4 border-t border-studio-border">
+                <button onclick="closeDetailModal()" class="px-6 py-2.5 rounded-full text-xs font-medium bg-white text-black hover:bg-gray-200">關閉窗口</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-message" class="fixed bottom-8 right-8 z-50 bg-studio-surface border border-studio-border px-6 py-4 rounded-xl flex items-center space-x-3 transform translate-y-24 opacity-0 transition-all duration-300">
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <p class="text-xs text-white font-medium">感謝您的諮詢，我們將盡快與您聯繫！</p>
+    </div>
+
+    <script>
+        // 作品資料庫
+        const portfolioData = {
+            'cyber-watch': {
+                title: "AURA Pro 智能手錶廣告",
+                tag: "3D Commercial / Tech",
+                desc: "針對高階 Wearable 產品打造的 3D 展示動畫，運用超高解析度金屬折射、液態流體與內部晶片爆炸圖，演繹極致科技工藝與健康量測精準度。",
+                duration: "製作時程：4 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            },
+            'fintech-app': {
+                title: "PayFlow 理財 App 動態視覺",
+                tag: "2D Motion Design / MG",
+                desc: "運用俐落流暢的變形轉場（Morphing Animation），將艱澀抽象的金融數據、資產分配與跨國轉帳流程轉化為直覺吸睛的 2D 視覺風格。",
+                duration: "製作時程：3 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            },
+            'electric-car': {
+                title: "NEO-X 概念電動車大片",
+                tag: "3D VFX / Automotive",
+                desc: "結合 Houdini 空氣力學風洞模擬與超立體光彩渲染，呈現概念車極致的飆速感與奢華空氣動力學車身曲線。",
+                duration: "製作時程：6 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            },
+            'cyber-earbuds': {
+                title: "SOUND-X 主動降噪耳機",
+                tag: "3D / Tech",
+                desc: "將聲波脈衝以物理粒子化呈現，搭配高精度聲學結構元件展開圖，詮釋主動降噪技術的核心震撼。",
+                duration: "製作時程：3.5 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            },
+            'brand-identity': {
+                title: "L'ÉXTASY 精品香水廣告",
+                tag: "3D / Luxury",
+                desc: "以水晶折射質感與柔滑奢華的液體流體動畫，轉譯頂級香水的前中後調氣味體驗。",
+                duration: "製作時程：5 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            },
+            'saas-explainer': {
+                title: "CloudFlow SaaS 數據動畫",
+                tag: "2D / MG",
+                desc: "高節奏感的 Motion Graphics 懶人包動畫，精準呈現雲端架構、資安防護與企業高效協同特質。",
+                duration: "製作時程：2.5 週",
+                video: "https://www.youtube.com/embed/dQw4w9WgXQ?autoplay=1&mute=1"
+            }
+        };
+
+        // 水平 3D Carousel 控制邏輯
+        let currentCarouselIndex = 0;
+        const totalCarouselItems = 6;
+
+        function updateCarouselDisplay() {
+            const items = document.querySelectorAll('#carousel-container .carousel-item');
+            if (!items.length) return;
+
+            items.forEach((item, idx) => {
+                // 重置樣式
+                item.classList.remove('active', 'side', 'hidden-item');
+
+                const leftIdx = (currentCarouselIndex - 1 + totalCarouselItems) % totalCarouselItems;
+                const rightIdx = (currentCarouselIndex + 1) % totalCarouselItems;
+
+                if (idx === currentCarouselIndex) {
+                    item.classList.add('active');
+                    item.style.order = 2;
+                    item.style.display = 'block';
+                } else if (idx === leftIdx) {
+                    item.classList.add('side');
+                    item.style.order = 1;
+                    item.style.display = 'block';
+                } else if (idx === rightIdx) {
+                    item.classList.add('side');
+                    item.style.order = 3;
+                    item.style.display = 'block';
+                } else {
+                    item.classList.add('hidden-item');
+                    item.style.display = 'none';
+                }
+            });
+
+            // 更新計數器
+            const counter = document.getElementById('carousel-counter');
+            if (counter) {
+                counter.innerText = `0${currentCarouselIndex + 1} / 0${totalCarouselItems}`;
+            }
+        }
+
+        function prevCarousel() {
+            currentCarouselIndex = (currentCarouselIndex - 1 + totalCarouselItems) % totalCarouselItems;
+            updateCarouselDisplay();
+        }
+
+        function nextCarousel() {
+            currentCarouselIndex = (currentCarouselIndex + 1) % totalCarouselItems;
+            updateCarouselDisplay();
+        }
+
+        // SPA 路由頁面切換機制
+        function navigateTo(pageId) {
+            const pages = document.querySelectorAll('.page-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            pages.forEach(page => {
+                page.classList.add('hidden');
+            });
+
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // 若切換到作品頁面，初始化 Carousel 佈局
+            if (pageId === 'portfolio') {
+                setTimeout(updateCarouselDisplay, 50);
+            }
+
+            // 更新導覽列 Active 狀態
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('text-white', 'font-semibold');
+                    link.classList.remove('text-studio-textMuted');
+                } else {
+                    link.classList.remove('text-white', 'font-semibold');
+                    link.classList.add('text-studio-textMuted');
+                }
+            });
+
+            // 關閉行動選單
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            // Trigger GSAP entry animation for the active page
+            if (window.gsap && targetPage) {
+                gsap.fromTo(targetPage, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+            }
+        }
+
+        // 彈窗 Modal 控制
+        function openModal(projectId) {
+            const item = portfolioData[projectId];
+            if(!item) return;
+
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-tag').innerText = item.tag;
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-duration').innerText = item.duration;
+            document.getElementById('modal-video').src = item.video;
+
+            const modal = document.getElementById('portfolio-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('portfolio-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('modal-video').src = "";
+        }
+
+        function openDetailModal(detailId) {
+            const item = detailData[detailId];
+            if(!item) return;
+
+            document.getElementById('detail-category').innerText = item.category;
+            document.getElementById('detail-title').innerText = item.title;
+            document.getElementById('detail-content').innerHTML = item.content;
+
+            const modal = document.getElementById('detail-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detail-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const toast = document.getElementById('toast-message');
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+            e.target.reset();
+        }
+
+        // 初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileBtn) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // 初始化 Carousel 藝廊
+            updateCarouselDisplay();
+
+            // Magnetic Button Effect
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    if(window.gsap) {
+                        gsap.to(btn, { x: x * 0.25, y: y * 0.25, duration: 0.3, ease: 'power2.out' });
+                    }
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    if(window.gsap) {
+                        gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+                    }
+                });
+            });
+
+            // GSAP 首頁元件進場序時動畫
+            if (window.gsap) {
+                const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 1 } });
+                tl.fromTo('.hero-badge', { opacity: 0, y: 20 }, { opacity: 1, y: 0, delay: 0.2 })
+                  .fromTo('.hero-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=0.6")
+                  .fromTo('.hero-desc', { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.6")
+                  .fromTo('.hero-buttons', { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.6")
+                  .fromTo('.hero-stats', { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.4");
+            }
+        });
+    </script>
+</body>
+</html>
